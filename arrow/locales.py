@@ -105,6 +105,7 @@ class Locale:
     past: ClassVar[str]
     future: ClassVar[str]
     and_word: ClassVar[Optional[str]] = None
+    comma_mark: ClassVar[Optional[str]] = None
 
     month_names: ClassVar[List[str]] = []
     month_abbreviations: ClassVar[List[str]] = []
@@ -160,9 +161,19 @@ class Locale:
             self._format_timeframe(timeframe, trunc(delta))
             for timeframe, delta in timeframes
         ]
-        if self.and_word:
-            parts.insert(-1, self.and_word)
-        humanized = " ".join(parts)
+        humanized = ""
+        for index, part in enumerate(parts):
+            humanized += part
+
+            if index <= len(parts) - 2:  # not the last one
+                if self.comma_mark and len(parts) > 2:
+                    humanized += self.comma_mark
+                humanized += " "
+            if index == len(parts) - 2:  # item before the last one
+                if not humanized.endswith(" "):
+                    humanized += " "
+                if self.and_word:
+                    humanized += f"{self.and_word} "
 
         if not only_distance:
             # Needed to determine the correct relative string to use
@@ -303,6 +314,7 @@ class EnglishLocale(Locale):
     past = "{0} ago"
     future = "in {0}"
     and_word = "and"
+    comma_mark = ","
 
     timeframes = {
         "now": "just now",
