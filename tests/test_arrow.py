@@ -1886,7 +1886,7 @@ class TestArrowHumanize:
         assert self.now.humanize(granularity=["second"]) == "just now"
         assert (
             self.now.humanize(granularity=["year", "month", "day", "hour", "second"])
-            == "in 0 years 0 months 0 days 0 hours and 0 seconds"
+            == "in 0 years, 0 months, 0 days, 0 hours, and 0 seconds"
         )
 
         later4000 = self.now.shift(seconds=4000)
@@ -1906,17 +1906,17 @@ class TestArrowHumanize:
         )
         assert (
             later4000.humanize(self.now, granularity=["day", "hour", "minute"])
-            == "in 0 days an hour and 6 minutes"
+            == "in 0 days, an hour, and 6 minutes"
         )
         assert (
             self.now.humanize(later4000, granularity=["day", "hour", "minute"])
-            == "0 days an hour and 6 minutes ago"
+            == "0 days, an hour, and 6 minutes ago"
         )
 
         later105 = self.now.shift(seconds=10**5)
         assert (
             self.now.humanize(later105, granularity=["hour", "day", "minute"])
-            == "a day 3 hours and 46 minutes ago"
+            == "a day, 3 hours, and 46 minutes ago"
         )
         with pytest.raises(ValueError):
             self.now.humanize(later105, granularity=["error", "second"])
